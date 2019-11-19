@@ -1,2 +1,2 @@
-include ':app'
+include ':app', ':widget_core'
 rootProject.name='FxWidget'

@@ -1,0 +1,60 @@
+apply plugin: 'com.android.library'
+def jarOptFileName = '../jarOpt/'
+android {
+    compileSdkVersion 29
+    buildToolsVersion "29.0.2"
+
+
+    defaultConfig {
+        minSdkVersion 21
+        targetSdkVersion 29
+        versionCode 1
+        versionName "1.0.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles 'consumer-rules.pro'
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    //------------cpoy jar START------------
+    def fileTime = new Date().format("MMddHHmm", TimeZone.getDefault())
+    def SDK_BASENAME = "FxWidget_V"
+    def SDK_VERSION = "${defaultConfig.versionName}" + "_" + fileTime
+    def sdkDestinationPath = jarOptFileName + SDK_BASENAME + SDK_VERSION
+    def zipFile = file('build/intermediates/packaged-classes/release/classes.jar')
+
+    task deleteBuild(type: Delete) {
+        delete sdkDestinationPath + SDK_BASENAME + SDK_VERSION + ".jar"
+    }
+
+    task makeJar(type: Jar) {
+        from zipTree(zipFile)
+        from fileTree(dir: 'src/main', includes: ['assets/**'])//将assets目录打入jar包
+        //        from(project.zipTree('libs/baidu.jar'))//将libs中的某一个文件打入jar包
+        baseName = SDK_BASENAME + SDK_VERSION
+        destinationDir = file(sdkDestinationPath)
+    }
+
+    task copyMap(type: Copy) {
+        from "build/outputs/mapping/release"
+        include "mapping.txt"
+        into sdkDestinationPath
+        rename {
+            SDK_BASENAME + SDK_VERSION + "_" + "mapping.txt"
+        }
+    }
+    makeJar.dependsOn(deleteBuild, build, copyMap)
+    //------------cpoy jar END------------
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    api 'androidx.appcompat:appcompat:1.1.0'
+
+}
