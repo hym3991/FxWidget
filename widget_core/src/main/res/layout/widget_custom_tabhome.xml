@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.ttp.widget.source.autolayout.AutoLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:clipChildren="false">
+
+    <com.neo.widget_core.navigation.CustomViewPage
+        android:id="@+id/widget_tabhome_vp"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+
+    <android.support.design.widget.BottomNavigationView
+        android:id="@+id/widget_tabhome_bnv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?android:attr/windowBackground"
+        android:clipChildren="false"/>
+
+</com.ttp.widget.source.autolayout.AutoLinearLayout>
